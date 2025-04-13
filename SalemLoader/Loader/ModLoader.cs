@@ -1,4 +1,6 @@
-﻿namespace SalemLoader.Loader
+﻿using System.Linq;
+
+namespace SalemLoader.Loader
 {
     using System;
     using System.Collections.Generic;
@@ -25,6 +27,11 @@
                 FileInfo pdb = new(Path.ChangeExtension(fileName, PdbExtension));
 
                 LoadMod(mod, pdb);
+            }
+
+            foreach (SalemMod salemMod in Mods.Keys.OrderBy(x => x.Priority))
+            {
+                salemMod.Load();
             }
         }
 
