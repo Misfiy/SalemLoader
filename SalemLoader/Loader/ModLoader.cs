@@ -14,7 +14,7 @@ namespace SalemLoader.Loader
 
         public static List<SalemMod> Mods { get; } = [];
 
-        public static void Initialize()
+        internal static void Initialize()
         {
             LoadAllMods(Path.Combine(Directory.GetCurrentDirectory(), "SalemMods"));
         }
@@ -40,7 +40,7 @@ namespace SalemLoader.Loader
             Assembly assembly = pdbFile.Exists
                 ? Assembly.Load(File.ReadAllBytes(modFile.FullName), File.ReadAllBytes(pdbFile.FullName))
                 : Assembly.Load(modFile.FullName);
-            
+
             InitializeModData(assembly);
         }
 

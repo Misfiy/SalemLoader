@@ -14,6 +14,9 @@
         /// </summary>
         public virtual int Priority { get; } = 0;
 
+        /// <summary>
+        /// Gets the assembly the Mod is located in.
+        /// </summary>
         public Assembly Assembly { get; internal set; } = null!;
 
         /// <summary>
