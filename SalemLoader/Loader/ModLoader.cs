@@ -24,9 +24,8 @@ namespace SalemLoader.Loader
             foreach (string fileName in Directory.GetFiles(directory, ModSearchPatten))
             {
                 FileInfo mod = new(fileName);
-                FileInfo pdb = new(Path.ChangeExtension(fileName, PdbExtension));
 
-                LoadMod(mod, pdb);
+                LoadMod(mod);
             }
 
             foreach (SalemMod salemMod in Mods.OrderBy(x => x.Priority))
@@ -35,17 +34,10 @@ namespace SalemLoader.Loader
             }
         }
 
-        private static void LoadMod(FileInfo modFile, FileInfo pdbFile)
+        private static void LoadMod(FileInfo modFile)
         {
-            Assembly assembly = pdbFile.Exists
-                ? Assembly.Load(File.ReadAllBytes(modFile.FullName), File.ReadAllBytes(pdbFile.FullName))
-                : Assembly.Load(modFile.FullName);
+            Assembly assembly = Assembly.Load(File.ReadAllBytes(modFile.FullName));
 
-            InitializeModData(assembly);
-        }
-
-        private static void InitializeModData(Assembly assembly)
-        {
             foreach (Type type in assembly.GetTypes())
             {
                 if (!type.IsSubclassOf(typeof(SalemMod)))
