@@ -12,7 +12,7 @@ namespace SalemLoader.Loader
         private const string ModSearchPatten = "*.dll";
         private const string PdbExtension = ".pdb";
 
-        public static Dictionary<SalemMod, Assembly> Mods { get; } = [];
+        public static List<SalemMod> Mods { get; } = [];
 
         public static void Initialize()
         {
@@ -29,7 +29,7 @@ namespace SalemLoader.Loader
                 LoadMod(mod, pdb);
             }
 
-            foreach (SalemMod salemMod in Mods.Keys.OrderBy(x => x.Priority))
+            foreach (SalemMod salemMod in Mods.OrderBy(x => x.Priority))
             {
                 salemMod.Load();
             }
@@ -53,8 +53,9 @@ namespace SalemLoader.Loader
 
                 if (Activator.CreateInstance(type) is not SalemMod salemMod)
                     continue;
-                
-                Mods.Add(salemMod, assembly);
+
+                salemMod.Assembly = assembly;
+                Mods.Add(salemMod);
             }
         }
     }
