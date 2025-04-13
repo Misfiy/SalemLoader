@@ -1,19 +1,26 @@
-﻿using System.Linq;
-
-namespace SalemLoader.Loader
+﻿namespace SalemLoader.Loader
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
 
+    /// <summary>
+    /// Handles the loading of all mods.
+    /// </summary>
     public static class ModLoader
     {
         private const string ModSearchPatten = "*.dll";
-        private const string PdbExtension = ".pdb";
 
+        /// <summary>
+        /// Gets a list of mods.
+        /// </summary>
         public static List<SalemMod> Mods { get; } = [];
 
+        /// <summary>
+        /// Initializes the ModLoader and loads it.
+        /// </summary>
         internal static void Initialize()
         {
             LoadAllMods(Path.Combine(Directory.GetCurrentDirectory(), "SalemMods"));
@@ -28,7 +35,7 @@ namespace SalemLoader.Loader
                 LoadMod(mod);
             }
 
-            foreach (SalemMod salemMod in Mods.OrderBy(x => x.Priority))
+            foreach (SalemMod salemMod in Mods.OrderBy(x => x.LoadPriority))
             {
                 salemMod.Load();
             }

@@ -2,6 +2,9 @@
 {
     using System.Reflection;
 
+    /// <summary>
+    /// Base class defining the logic of a Mod.
+    /// </summary>
     public abstract class SalemMod
     {
         /// <summary>
@@ -12,7 +15,7 @@
         /// <summary>
         /// Gets the priority.
         /// </summary>
-        public virtual int Priority { get; } = 0;
+        public virtual int LoadPriority { get; } = 0;
 
         /// <summary>
         /// Gets the assembly the Mod is located in.

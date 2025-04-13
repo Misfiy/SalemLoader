@@ -8,11 +8,24 @@
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-    <ItemGroup>
+
+    <ItemGroup Label="Style">
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.5.0-beta.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" IncludeAssets="All" PrivateAssets="All" />
+    </ItemGroup>
+
+    <PropertyGroup Label="Style">
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisMode>recommended</AnalysisMode>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <CodeAnalysisRuleSet>../stylecop.ruleset</CodeAnalysisRuleSet>
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    </PropertyGroup>
+    
+    <ItemGroup Label="References">
         <Reference Include="Assembly-CSharp" HintPath="$(TOS2)\Assembly-CSharp.dll" Publicize="true" />
         <Reference Include="UnityEngine.CoreModule" HintPath="$(TOS2)\UnityEngine.CoreModule.dll" Publicize="true" />
         <Reference Include="BepInEx" HintPath="../Libs/BepInEx.dll" Publicize="true" />
