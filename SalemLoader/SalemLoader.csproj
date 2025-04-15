@@ -27,7 +27,8 @@
     <ItemGroup Label="References">
         <Reference Include="Assembly-CSharp" HintPath="$(TOS2)\Assembly-CSharp.dll" Publicize="true" />
         <Reference Include="System.Net.Http" />
-        <Reference Include="UnityEngine.CoreModule" HintPath="$(TOS2)\UnityEngine.CoreModule.dll" Publicize="true" />
+        <Reference Include="UnityEngine.CoreModule" HintPath="$(TOS2)\UnityEngine.CoreModule.dll" />
+        <Reference Include="UnityEngine" HintPath="$(TOS2)\UnityEngine.dll" />
         <Reference Include="BepInEx" HintPath="../Libs/BepInEx.dll" Publicize="true" />
     </ItemGroup>
 </Project>

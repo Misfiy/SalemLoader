@@ -44,9 +44,12 @@
 
             // do version check on them
             GithubRelease? toUpdate = null;
-            if (toUpdate != null)
+            if (toUpdate.HasValue)
             {
                 // update
+                GithubReleaseAsset asset = toUpdate.Value.Assets.FirstOrDefault();
+
+                // get from asset.Url
             }
 
             // load all mods after checking ModLoader updates

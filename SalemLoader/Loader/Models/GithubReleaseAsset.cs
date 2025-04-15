@@ -3,7 +3,7 @@
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Data about a release's assets.
+    /// Data about a release's assets. Credit to ExMod-Team/EXILED for this.
     /// </summary>
     public readonly struct GithubReleaseAsset
     {
@@ -36,22 +36,5 @@
         /// </summary>
         [DataMember(Name = "browser_download_url")]
         public readonly string BrowserDownloadUrl;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GithubReleaseAsset"/> struct.
-        /// </summary>
-        /// <param name="id"><inheritdoc cref="Id"/></param>
-        /// <param name="name"><inheritdoc cref="Name"/></param>
-        /// <param name="size"><inheritdoc cref="Size"/></param>
-        /// <param name="url"><inheritdoc cref="Url"/></param>
-        /// <param name="browser_download_url"><inheritdoc cref="BrowserDownloadUrl"/></param>
-        public GithubReleaseAsset(int id, string name, int size, string url, string browser_download_url)
-        {
-            Id = id;
-            Name = name;
-            Size = size;
-            Url = url;
-            BrowserDownloadUrl = browser_download_url;
-        }
     }
 }
