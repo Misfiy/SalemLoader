@@ -15,7 +15,8 @@
 
         private void Awake()
         {
-            ModLoader.Initialize();
+            // load it.
+            _ = ModDownloader.Instance;
         }
     }
 }
