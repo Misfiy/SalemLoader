@@ -34,13 +34,12 @@
             foreach (string fileName in Directory.GetFiles(directory, ModSearchPatten))
             {
                 FileInfo mod = new(fileName);
-
                 LoadMod(mod);
             }
 
             foreach (SalemMod salemMod in Mods.OrderBy(x => x.LoadPriority))
             {
-                salemMod.Load();
+                salemMod.Enable();
             }
         }
 

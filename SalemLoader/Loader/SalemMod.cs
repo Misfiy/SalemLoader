@@ -25,6 +25,6 @@
         /// <summary>
         /// Handles loading the <see cref="SalemMod"/>.
         /// </summary>
-        public abstract void Load();
+        public abstract void Enable();
     }
 }
