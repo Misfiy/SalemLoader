@@ -28,6 +28,9 @@
 
         private static void LoadAllMods(string directory)
         {
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
             foreach (string fileName in Directory.GetFiles(directory, ModSearchPatten))
             {
                 FileInfo mod = new(fileName);

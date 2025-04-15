@@ -1,7 +1,12 @@
 ﻿namespace SalemLoader.Loader
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
+    using SalemLoader.Loader.Models;
+    using Server.Shared.Utils.Json;
 
     /// <summary>
     /// Handles the downloading of mods and its data.
@@ -25,7 +30,6 @@
             };
 
             CheckForLoaderUpdates();
-            ModLoader.Initialize();
         }
 
         /// <summary>
@@ -35,6 +39,26 @@
 
         private void CheckForLoaderUpdates()
         {
+            GithubRelease[] releases = GetRecentReleases().GetAwaiter().GetResult();
+            IEnumerable<GithubRelease> orderedReleases = releases.OrderBy(r => r.CreatedAt);
+
+            // do version check on them
+            GithubRelease? toUpdate = null;
+            if (toUpdate != null)
+            {
+                // update
+            }
+
+            // load all mods after checking ModLoader updates
+            ModLoader.Initialize();
+        }
+
+        private async Task<GithubRelease[]> GetRecentReleases()
+        {
+            string url = string.Format(GetReleasesTemplate, RepoId);
+            using HttpResponseMessage httpResponse = await _client.GetAsync(url).ConfigureAwait(false);
+            string content = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return JsonSerialization.Deserialize<GithubRelease[]>(content) ?? [];
         }
     }
 }
