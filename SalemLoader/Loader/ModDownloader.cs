@@ -70,14 +70,14 @@
         private async Task<GithubRelease[]> GetRecentReleases()
         {
             string url = string.Format(GetReleasesTemplate, RepoId);
-            using HttpResponseMessage httpResponse = await _client.GetAsync(url).ConfigureAwait(false);
-            string content = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+            using HttpResponseMessage httpResponse = await _client.GetAsync(url);
+            string content = await httpResponse.Content.ReadAsStringAsync();
             return JsonSerialization.Deserialize<GithubRelease[]>(content) ?? [];
         }
 
         private async Task<byte[]> GetLatestReleaseBinary(GithubReleaseAsset url)
         {
-            using HttpResponseMessage httpResponse = await _client.GetAsync(url.Url).ConfigureAwait(false);
+            using HttpResponseMessage httpResponse = await _client.GetAsync(url.Url);
             return httpResponse.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
         }
     }
