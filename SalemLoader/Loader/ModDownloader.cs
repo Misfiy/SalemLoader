@@ -31,7 +31,7 @@
                 Timeout = TimeSpan.FromSeconds(5),
             };
 
-            CheckForLoaderUpdates();
+            Task.Run(Run);
         }
 
         /// <summary>
@@ -39,9 +39,15 @@
         /// </summary>
         internal static ModDownloader Instance => _instance ??= new ModDownloader();
 
-        private void CheckForLoaderUpdates()
+        private async Task Run()
         {
-            GithubRelease[] releases = GetRecentReleases().GetAwaiter().GetResult();
+            await CheckForLoaderUpdates();
+            ModLoader.Initialize();
+        }
+
+        private async Task CheckForLoaderUpdates()
+        {
+            GithubRelease[] releases = await GetRecentReleases();
 
             // do version check on them
             GithubRelease? toUpdate = releases.FirstOrDefault();
@@ -51,17 +57,14 @@
                 GithubReleaseAsset? asset = toUpdate.Value.Assets.FirstOrDefault(asset => asset.Name.Contains(".dll"));
                 if (asset.HasValue)
                 {
+                    byte[] newDllBytes = GetLatestReleaseBinary(asset.Value).GetAwaiter().GetResult();
                     string currentDllPath = Assembly.GetExecutingAssembly().Location;
                     string backupPath = currentDllPath + ".old";
 
                     File.Move(currentDllPath, backupPath);
-                    byte[] newDllBytes = GetLatestReleaseBinary(asset.Value).GetAwaiter().GetResult();
                     File.WriteAllBytes(currentDllPath, newDllBytes);
                 }
             }
-
-            // load all mods after checking ModLoader updates
-            ModLoader.Initialize();
         }
 
         private async Task<GithubRelease[]> GetRecentReleases()

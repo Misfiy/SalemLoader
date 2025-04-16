@@ -11,7 +11,7 @@
     {
         private const string Guid = "com.eves.salemloader";
         private const string Name = "SalemLoader";
-        private const string Version = "0.1.0";
+        private const string Version = "0.0.1";
 
         private void Awake()
         {
