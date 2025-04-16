@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Net.Http;
+    using System.Reflection;
     using System.Threading.Tasks;
     using SalemLoader.Loader.Models;
     using Server.Shared.Utils.Json;
@@ -43,13 +45,25 @@
             IEnumerable<GithubRelease> orderedReleases = releases.OrderBy(r => r.CreatedAt);
 
             // do version check on them
-            GithubRelease? toUpdate = null;
+            GithubRelease? toUpdate = orderedReleases.FirstOrDefault();
             if (toUpdate.HasValue)
             {
-                // update
-                GithubReleaseAsset asset = toUpdate.Value.Assets.FirstOrDefault();
+                // update from asset.Url
+                GithubReleaseAsset? asset = toUpdate.Value.Assets.FirstOrDefault(asset => asset.Name.Contains(".dll"));
+                if (asset.HasValue)
+                {
+                    byte[] updatedVersionRaw = GetLatestReleaseBinary(asset.Value).GetAwaiter().GetResult();
 
-                // get from asset.Url
+                    string currentDllPath = Assembly.GetExecutingAssembly().Location;
+                    string backupPath = currentDllPath + ".old";
+
+                    if (File.Exists(backupPath))
+                        File.Delete(backupPath);
+
+                    File.Move(currentDllPath, backupPath);
+                    byte[] newDllBytes = GetLatestReleaseBinary(asset.Value).GetAwaiter().GetResult();
+                    File.WriteAllBytes(currentDllPath, newDllBytes);
+                }
             }
 
             // load all mods after checking ModLoader updates
@@ -62,6 +76,12 @@
             using HttpResponseMessage httpResponse = await _client.GetAsync(url).ConfigureAwait(false);
             string content = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonSerialization.Deserialize<GithubRelease[]>(content) ?? [];
+        }
+
+        private async Task<byte[]> GetLatestReleaseBinary(GithubReleaseAsset url)
+        {
+            using HttpResponseMessage httpResponse = await _client.GetAsync(url.Url).ConfigureAwait(false);
+            return httpResponse.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
         }
     }
 }
