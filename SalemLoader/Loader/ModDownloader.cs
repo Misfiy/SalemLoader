@@ -28,7 +28,7 @@
         {
             _client = new HttpClient
             {
-                Timeout = TimeSpan.FromSeconds(2.5f),
+                Timeout = TimeSpan.FromSeconds(5),
             };
 
             CheckForLoaderUpdates();
@@ -42,23 +42,17 @@
         private void CheckForLoaderUpdates()
         {
             GithubRelease[] releases = GetRecentReleases().GetAwaiter().GetResult();
-            IEnumerable<GithubRelease> orderedReleases = releases.OrderBy(r => r.CreatedAt);
 
             // do version check on them
-            GithubRelease? toUpdate = orderedReleases.FirstOrDefault();
+            GithubRelease? toUpdate = releases.FirstOrDefault();
             if (toUpdate.HasValue)
             {
                 // update from asset.Url
                 GithubReleaseAsset? asset = toUpdate.Value.Assets.FirstOrDefault(asset => asset.Name.Contains(".dll"));
                 if (asset.HasValue)
                 {
-                    byte[] updatedVersionRaw = GetLatestReleaseBinary(asset.Value).GetAwaiter().GetResult();
-
                     string currentDllPath = Assembly.GetExecutingAssembly().Location;
                     string backupPath = currentDllPath + ".old";
-
-                    if (File.Exists(backupPath))
-                        File.Delete(backupPath);
 
                     File.Move(currentDllPath, backupPath);
                     byte[] newDllBytes = GetLatestReleaseBinary(asset.Value).GetAwaiter().GetResult();
